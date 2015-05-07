@@ -35,9 +35,7 @@ Route::get('registro', 'RegistroController@index');
 * Backend
 */
 
-
-
-Route::get('appanel', 'AppanelController@index');
+Route::get('appanel/login', 'Panel\LoginController@index');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
