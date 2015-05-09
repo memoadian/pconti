@@ -32,10 +32,32 @@ Route::get('pagar', 'PagarController@index');
 Route::get('registro', 'RegistroController@index');
 
 /*
-* Backend
+* Backend login/out
 */
 
-Route::get('appanel/login', 'Panel\LoginController@index');
+Route::get('appanel', 'PanelController@index');
+
+Route::get('appanel/login', 'PanelLoginController@index');
+
+Route::post('appanel/dologin', 'PanelLoginController@dologin');
+
+Route::get('appanel/logout', 'PanelLoginController@logout');
+
+/*
+* Backend Productos
+*/
+
+Route::get('appanel/productos', 'PanelProductController@index');
+
+Route::get('appanel/producto/agregar', 'PanelProductController@add');
+
+Route::get('appanel/producto/editar/{id}', 'PanelProductController@edit');
+
+Route::get('appanel/producto/editando/{id}', 'PanelProductController@doedit');
+
+Route::get('appanel/producto/eliminar/{id}', 'PanelProductController@remove');
+
+/* Auth */
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

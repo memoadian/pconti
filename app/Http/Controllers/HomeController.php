@@ -1,7 +1,7 @@
 <?php 
 
 namespace App\Http\Controllers;
-use App\Models\Product;
+use App\Product;
 
 class HomeController extends Controller {
 
@@ -10,35 +10,21 @@ class HomeController extends Controller {
 	| Home Controller
 	|--------------------------------------------------------------------------
 	|
-	| This controller renders your application's "dashboard" for users that
-	| are authenticated. Of course, you are free to change or remove the
-	| controller as you wish. It is just here to get your app started!
+	| Controlador de la parte frontal de la tienda
 	|
 	*/
 
 	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		$this->middleware('guest');
-		//$this->middleware('auth');
-	}
-
-	/**
-	 * Show the application dashboard to the user.
+	 * Muestra el index de la tienda.
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{
+	public function index(){
 		$data = array(
 			'products' => Product::all(),
 			'title' => 'Peleteria Continental',
 		);
-		return view('home', $data);
+		return view('front/home', $data);
 	}
 
 }
