@@ -146,7 +146,6 @@ return [
 		'App\Providers\RouteServiceProvider',
 
 		/* My Providers */
-		'Barryvdh\Debugbar\ServiceProvider',
 		'Gloudemans\Shoppingcart\ShoppingcartServiceProvider'
 
 	],
@@ -198,8 +197,6 @@ return [
 		'View'      => 'Illuminate\Support\Facades\View',
 
 		/* My alliases */
-
-		'Debugbar'  => 'Barryvdh\Debugbar\Facade',
 		'Cart'      => 'Gloudemans\Shoppingcart\Facades\Cart',
 
 	],

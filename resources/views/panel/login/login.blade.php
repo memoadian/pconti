@@ -13,7 +13,7 @@
 			<label for="password">Contraseña</label>
 		</div>
 		<div class="input-field col s6">
-			<input type="submit" name="" value="Entrar">
+			<button class="btn waves-effect waves-light" type="submit" name="" value="Entrar">Entrar</button>
 		</div>
 	</div>
 </form>

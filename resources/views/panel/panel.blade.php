@@ -2,9 +2,12 @@
 <html>
 <head>
 	<title>Panel de control</title>
-	<link rel="stylesheet" type="text/css" href="{{asset('panel/css/materialize.min.css')}}">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="{{asset('panel/css/sweetalert2.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('panel/css/materialize.css')}}">
 </head>
 <body>
+	<!-- SIDEBAR -->
 	@if(Auth::check())
 	@section('sidebar')
 		<header>
@@ -61,6 +64,16 @@
 
 	<div class="row">
 		<main>
+			<!-- NAV -->
+			@if(Auth::check())
+			<nav class="top-nav">
+				<div class="container">
+					<div class="nav-wrapper"><a class="page-title">{{$title}}</a></div>
+				</div>
+			</nav>
+			@endif
+
+			<!-- CONTENIDO -->
 			<div class="container">
 				@section('content')
 				@show
@@ -68,6 +81,10 @@
 		</main>
 	</div>
 </body>
+
+<!-- SCRIPTS PANEL -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="{{asset('panel/js/materialize.min.js')}}"></script>
+<script src="{{asset('panel/js/sweetalert2.js')}}"></script>
+
 </html>

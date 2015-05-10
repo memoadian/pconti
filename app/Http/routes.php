@@ -51,9 +51,11 @@ Route::get('appanel/productos', 'PanelProductController@index');
 
 Route::get('appanel/producto/agregar', 'PanelProductController@add');
 
+Route::post('appanel/producto/agregando', 'PanelProductController@doadd');
+
 Route::get('appanel/producto/editar/{id}', 'PanelProductController@edit');
 
-Route::get('appanel/producto/editando/{id}', 'PanelProductController@doedit');
+Route::post('appanel/producto/editando/{id}', 'PanelProductController@doedit');
 
 Route::get('appanel/producto/eliminar/{id}', 'PanelProductController@remove');
 

@@ -21,7 +21,7 @@ class HomeController extends Controller {
 	 */
 	public function index(){
 		$data = array(
-			'products' => Product::all(),
+			'productos' => Product::all(),
 			'title' => 'Peleteria Continental',
 		);
 		return view('front/home', $data);
