@@ -2,23 +2,30 @@
 @section('content')
 	<div class="row">
 	@if (!$productos->isEmpty())
-		@foreach ($productos as $producto)
+		@foreach ($productos as $p)
 			<div class="col s12 m12 l6">
 				<div class="card">
 					<div class="card-image">
-						@if(count($producto->imagenes) > 0)
-							<img src="{{$producto->imagenes[0]->url}}">
+						@if( $p->image != '' )
+							<img src="{{ asset('uploads/medium/'.$p->image) }}">
 						@else
-							<img src="http://dummyimage.com/600x400/B26300/fff" alt="{{$producto->name}}">
+							<img src="http://dummyimage.com/600x400/B26300/fff" alt="{{$p->name}}">
 						@endif
-						<span class="card-title">{{$producto->name}}</span>
+						<span class="card-title"></span>
 					</div>
 					<div class="card-content">
-						<p>{{$producto->description}}</p>
+						<h5>{{$p->name}}</h5>
+						<p>{{$p->description}}</p>
 					</div>
 					<div class="card-action">
-						<a href="#">Editar</a>
-						<a href='#'>Borrar</a>
+						<a href="{{ url('appanel/producto/editar/'.$p->id) }}" class="btn waves-effect waves-light blue lighten-1">
+							Editar
+							<i class="mdi-image-edit right"></i>
+						</a>
+						<a href="{{ url('/') }}" class="btn waves-effect waves-light red">
+							Borrar
+							<i class="mdi-navigation-cancel right"></i>
+						</a>
 					</div>
 				</div>
 			</div>

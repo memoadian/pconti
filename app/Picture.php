@@ -1,13 +1,15 @@
-<?php namespace App;
+<?php
+
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Image extends Model {
+class Picture extends Model {
 
 	public $timestamps = false;
 
 	public function producto(){
-		return $this->belongsTo('App\Product');
+		return $this->belongsToMany('App\Product');
 	}
 
 }

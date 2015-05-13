@@ -146,7 +146,8 @@ return [
 		'App\Providers\RouteServiceProvider',
 
 		/* My Providers */
-		'Gloudemans\Shoppingcart\ShoppingcartServiceProvider'
+		'Gloudemans\Shoppingcart\ShoppingcartServiceProvider',
+		'Intervention\Image\ImageServiceProvider'
 
 	],
 
@@ -198,6 +199,7 @@ return [
 
 		/* My alliases */
 		'Cart'      => 'Gloudemans\Shoppingcart\Facades\Cart',
+		'Image' => 'Intervention\Image\Facades\Image'
 
 	],
 

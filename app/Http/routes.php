@@ -59,6 +59,54 @@ Route::post('appanel/producto/editando/{id}', 'PanelProductController@doedit');
 
 Route::get('appanel/producto/eliminar/{id}', 'PanelProductController@remove');
 
+/*
+* Backend Categories
+*/
+
+Route::get('appanel/categorias', 'PanelCategoryController@index');
+
+Route::get('appanel/categoria/agregar', 'PanelCategoryController@add');
+
+Route::post('appanel/categoria/agregando', 'PanelCategoryController@doadd');
+
+Route::get('appanel/categoria/editar/{id}', 'PanelCategoryController@edit');
+
+Route::post('appanel/categoria/editando/{id}', 'PanelCategoryController@doedit');
+
+Route::get('appanel/categoria/eliminar/{id}', 'PanelCategoryController@remove');
+
+/*
+* Backend Users
+*/
+
+Route::get('appanel/usuarios', 'PanelUserController@index');
+
+Route::get('appanel/usuario/agregar', 'PanelUserController@add');
+
+Route::post('appanel/usuario/agregando', 'PanelUserController@doadd');
+
+Route::get('appanel/usuario/editar/{id}', 'PanelUserController@edit');
+
+Route::post('appanel/usuario/editando/{id}', 'PanelUserController@doedit');
+
+Route::get('appanel/usuario/eliminar/{id}', 'PanelUserController@remove');
+
+/*
+* Backend Images
+*/
+
+Route::get('appanel/imagenes', 'PanelImageController@index');
+
+Route::get('appanel/imagenes/json', 'PanelImageController@picsJSON');
+
+Route::post('appanel/imagen/upload', 'PanelImageController@upload');
+
+Route::get('appanel/imagen/editar/{id}', 'PanelImageController@edit');
+
+Route::post('appanel/imagen/editando/{id}', 'PanelImageController@doedit');
+
+Route::get('appanel/imagen/eliminar/{id}', 'PanelImageController@remove');
+
 /* Auth */
 
 Route::controllers([

@@ -3,6 +3,7 @@
 <head>
 	<title>Panel de control</title>
 	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<meta name="_token" content="{{ csrf_token() }}" />
 	<link rel="stylesheet" type="text/css" href="{{asset('panel/css/sweetalert2.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('panel/css/materialize.css')}}">
 </head>
@@ -84,7 +85,9 @@
 
 <!-- SCRIPTS PANEL -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="{{asset('panel/js/materialize.min.js')}}"></script>
-<script src="{{asset('panel/js/sweetalert2.js')}}"></script>
+<script src="{{ asset('panel/js/materialize.min.js' )}}"></script>
+<script src="{{ asset('panel/js/dnn.upload.js') }}"></script>
+<script src="{{ asset('panel/js/sweetalert2.js') }}"></script>
+<script src="{{ asset('panel/js/functions.js') }}"></script>
 
 </html>
