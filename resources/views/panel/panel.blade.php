@@ -4,8 +4,19 @@
 	<title>Panel de control</title>
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<meta name="_token" content="{{ csrf_token() }}" />
+
+	<!-- STYLES -->
 	<link rel="stylesheet" type="text/css" href="{{asset('panel/css/sweetalert2.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('panel/css/materialize.css')}}">
+
+	<!-- SCRIPTS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="{{ asset('panel/js/materialize.min.js' )}}"></script>
+	<script src="{{ asset('panel/js/sweetalert2.js') }}"></script>
+	<script src="{{ asset('panel/js/numeral.min.js') }}"></script>
+	<script src="{{ asset('panel/js/dnn.upload.js') }}"></script>
+	<script src="{{ asset('panel/js/slicknav.js') }}"></script>
+	<script src="{{ asset('panel/js/functions.js') }}"></script>
 </head>
 <body>
 	<!-- SIDEBAR -->
@@ -21,12 +32,12 @@
 				</li>
 				<li class="bold">
 					<a href="{{url('appanel/productos')}}" class="waves-effect waves-teal">
-						<i class="mdi-editor-format-quote"></i> Productos
+						<i class="mdi-action-shopping-cart"></i> Productos
 					</a>
 				</li>
 				<li class="bold">
 					<a href="{{url('appanel/categorias')}}" class="waves-effect waves-teal">
-						<i class="mdi-av-videocam"></i> Categorias
+						<i class="mdi-content-sort"></i> Categorias
 					</a>
 				</li>
 
@@ -69,7 +80,11 @@
 			@if(Auth::check())
 			<nav class="top-nav">
 				<div class="container">
-					<div class="nav-wrapper"><a class="page-title">{{$title}}</a></div>
+					<div class="nav-wrapper">
+						<h5>
+							<a class="page-title">{{$title}}</a>
+						</h5>
+					</div>
 				</div>
 			</nav>
 			@endif
@@ -79,15 +94,11 @@
 				@section('content')
 				@show
 			</div>
+
+			<!-- CONTENIDO FLUIDO -->
+			@section('fluid-content')
+			@show
 		</main>
 	</div>
 </body>
-
-<!-- SCRIPTS PANEL -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="{{ asset('panel/js/materialize.min.js' )}}"></script>
-<script src="{{ asset('panel/js/dnn.upload.js') }}"></script>
-<script src="{{ asset('panel/js/sweetalert2.js') }}"></script>
-<script src="{{ asset('panel/js/functions.js') }}"></script>
-
 </html>

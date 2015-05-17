@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 use App\Picture;
 use Image;
 use Input;
+use DB;
+use App\Classes\Cleaner;
 
 /**
 * Image Controller
@@ -14,7 +16,12 @@ class PanelImageController extends Controller{
 	}
 
 	public function index(){
-
+		$images = Picture::paginate(50);
+		$data = array(
+			'title' => 'Galería de imágenes',
+			'images' => $images
+		);
+		return view('panel/images/index', $data);
 	}
 
 	public function upload(){
@@ -38,7 +45,7 @@ class PanelImageController extends Controller{
 				}
 
 				//traemos el nobre d ela imagen para que sea más fácil encontrar la imagen
-				$name = $this->cleaner($upload->getClientOriginalName());
+				$name = Cleaner::url($upload->getClientOriginalName());
 				$name = substr($name, 0, 10);
 
 				//generamos el nombre de la imagen
@@ -47,11 +54,12 @@ class PanelImageController extends Controller{
 				//se mueve la imágen a la carpeta uploads
 				$upload->move('uploads', $filename);
 				$fileUrl = asset('uploads/'.$filename);
-				$fileUrlMiddle = asset('uploads/medium/'.$filename);
+				$fileUrlMiddle = asset('uploads/sq/'.$filename);
 				$file = public_path('uploads/'.$filename);
 
 				//asignamos las carpetas a variables
 				$pathMedium = public_path('uploads/medium/'.$filename);
+				$pathSmall = public_path('uploads/small/'.$filename);
 				$pathSq = public_path('uploads/sq/'.$filename);
 
 				//redimensiones, a todos tamaños  de carpetascuidando el upsize
@@ -59,7 +67,11 @@ class PanelImageController extends Controller{
 					$constraint->aspectRatio();
 					$constraint->upsize();
 				})->save($pathMedium);
-				Image::make($file)->resize(128, 128)->save($pathSq);
+				Image::make($file)->fit(320, 320, function ($constraint) {
+					$constraint->aspectRatio();
+					$constraint->upsize();
+				})->save($pathSmall);
+				Image::make($file)->fit(128, 128)->save($pathSq);
 
 				//insertamos la imagen en la bd
 				$nuevaImagen = new Picture;
@@ -88,8 +100,9 @@ class PanelImageController extends Controller{
 				$md5 = $imagen[0]->md5;
 				$ext = $imagen[0]->ext;
 
-				$fileUrl = asset('pictures/'.$imagen[0]->url);
-				$fileUrlMiddle = asset('pictures/medium/'.$imagen[0]->url);
+				$filename = $name.'-'.$md5.'.'.$ext;
+
+				$fileUrlMiddle = asset('uploads/sq/'.$filename);
 				//guardamos el status en json
 				$status = array(
 					'status' => 'repeat',
@@ -97,7 +110,6 @@ class PanelImageController extends Controller{
 						'time' => time()
 					),
 					'description' => 'La imágen ya existe',
-					'pic' => $fileUrl,
 					'filelink' => $fileUrlMiddle,
 					'id' => $imagen[0]->id
 				);
@@ -124,17 +136,30 @@ class PanelImageController extends Controller{
 		return response()->json($res);
 	}
 
-	function cleaner($str, $replace=array(), $delimiter='-') {
-		if( !empty($replace) ) {
-			$str = str_replace((array)$replace, ' ', $str);
+	public function remove($id){
+		$img = Picture::find($id);
+		$imgName = $img->name.'-'.$img->md5.'.'.$img->ext;
+		if( file_exists( public_path( 'uploads/'.$imgName) ) ){
+			unlink(	public_path( 'uploads/'.$imgName ) );
+		}
+		if( file_exists( public_path( 'uploads/medium/'.$imgName) ) ){
+			unlink(	public_path( 'uploads/medium/'.$imgName ) );
+		}
+		if( file_exists( public_path( 'uploads/small/'.$imgName) ) ){
+			unlink(	public_path( 'uploads/small/'.$imgName ) );
+		}
+		if( file_exists( public_path( 'uploads/sq/'.$imgName) ) ){
+			unlink(	public_path( 'uploads/sq/'.$imgName ) );
 		}
 
-		$clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
-		$clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
-		$clean = strtolower(trim($clean, '-'));
-		$clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
+		$img->producto()->detach();
+		$img->delete();
 
-		return $clean;
+		DB::table('products')
+            ->where('image', $imgName)
+            ->update(['image' => '']);
+
+		return 'Imágen eliminada correctamente';
 	}
 
 }

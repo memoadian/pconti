@@ -16,8 +16,9 @@
 							<input id="password" type="password" name="password" class="validate" placeholder="">
 							<label for="password">Contraseña</label>
 						</div>
-						<div class="input-field col s4 offset-s8">
-							<button class="btn waves-effect waves-light" type="submit" name="" value="Entrar">Entrar</button>
+						<div class="input-field col s8 m8 l5 offset-s4 offset-m4 offset-l7">
+							<button class="btn waves-effect waves-light right" type="submit" name="" value="Entrar">	Entrar
+							</button>
 						</div>
 						<a style="text-align:right; display:block; padding:20px 15px 0; clear:both" href="{{url('/appanel')}}">Recuperar Contraseña</a>
 					</div>

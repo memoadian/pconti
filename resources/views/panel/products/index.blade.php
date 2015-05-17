@@ -1,13 +1,13 @@
 @extends('panel/panel')
-@section('content')
+@section('fluid-content')
 	<div class="row">
 	@if (!$productos->isEmpty())
 		@foreach ($productos as $p)
-			<div class="col s12 m12 l6">
+			<div class="col s12 m12 l4">
 				<div class="card">
 					<div class="card-image">
 						@if( $p->image != '' )
-							<img src="{{ asset('uploads/medium/'.$p->image) }}">
+							<img src="{{ asset('uploads/small/'.$p->image) }}">
 						@else
 							<img src="http://dummyimage.com/600x400/B26300/fff" alt="{{$p->name}}">
 						@endif

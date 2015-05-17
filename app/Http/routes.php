@@ -65,8 +65,6 @@ Route::get('appanel/producto/eliminar/{id}', 'PanelProductController@remove');
 
 Route::get('appanel/categorias', 'PanelCategoryController@index');
 
-Route::get('appanel/categoria/agregar', 'PanelCategoryController@add');
-
 Route::post('appanel/categoria/agregando', 'PanelCategoryController@doadd');
 
 Route::get('appanel/categoria/editar/{id}', 'PanelCategoryController@edit');
@@ -80,8 +78,6 @@ Route::get('appanel/categoria/eliminar/{id}', 'PanelCategoryController@remove');
 */
 
 Route::get('appanel/usuarios', 'PanelUserController@index');
-
-Route::get('appanel/usuario/agregar', 'PanelUserController@add');
 
 Route::post('appanel/usuario/agregando', 'PanelUserController@doadd');
 

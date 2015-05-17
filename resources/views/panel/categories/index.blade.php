@@ -1,33 +1,49 @@
 @extends('panel/panel')
 @section('content')
 	<div class="row">
-	@if (!$categories->isEmpty())
-		@foreach ($categories as $category)
-			<div class="col s12 m12 l6">
-				<div class="card">
-					<div class="card-image">
-						@if(count($category->imagenes) > 0)
-							<img src="{{$category->imagenes[0]->url}}">
-						@else
-							<img src="http://dummyimage.com/600x400/B26300/fff" alt="{{$category->name}}">
-						@endif
-						<span class="card-title">{{$category->name}}</span>
-					</div>
-					<div class="card-content">
-						<p>{{$category->description}}</p>
-					</div>
-					<div class="card-action">
-						<a href="#">Editar</a>
-						<a href='#'>Borrar</a>
+		<div class="col s12 m12 l6">
+			<form action="{{ asset('appanel/categoria/agregando') }}" method="post">
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="catname" name="catname" type="text">
+						<label for="catname">Nombre</label>
 					</div>
 				</div>
-			</div>
-		@endforeach
-	@endif
-		<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-			<a href="{{url('appanel/categoria/agregar')}}" class="btn-floating btn-large red">
-				<i class="large mdi-content-add"></i>
-			</a>
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="slug" placeholder="" name="slug" type="text" >
+						<label for="slug">Slug</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12">
+						<button class="btn waves-effect waves-light right" type="submit" name="action">Agregar
+							<i class="mdi-content-send right"></i>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col s12 m12 l6">
+			<ul class="collection">
+			@if (!$categorias->isEmpty())
+				@foreach ($categorias as $c)
+				<li class="collection-item">
+					<p>
+						{{ $c->name }}
+					</p>
+					@if( $c->id != 1 )
+					<a href="{{ url('/') }}" data-id="{{ $c->id }}" class="btn-floating red delete-category">
+						<i class="mdi-navigation-close"></i>
+					</a>
+					@endif
+					<a href="{{ url('appanel/categoria/editar/'.$c->id) }}" class="btn-floating blue lighten-1">
+						<i class="mdi-image-edit"></i>
+					</a>
+				</li>
+				@endforeach
+			@endif
+			</ul>
 		</div>
 	</div>
 @stop

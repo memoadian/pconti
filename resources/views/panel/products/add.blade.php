@@ -9,16 +9,15 @@
 			<?php $output .= $error.'<br>' ?>
 		@endforeach
 		<script>
-		window.onload = function(){
 			swal({
 				title: 'Verfica lo siguiente',
 				html: '<?php echo $output ?>',
 				type: 'error'
 			});
-		};
 		</script>
 	@endif
 	<!-- Manejo de errores -->
+
 	<input type="file" id="file" name="file" class="hidden">
 
 	<form action="{{url('appanel/producto/agregando')}}" method="post" class="col s12">
@@ -49,14 +48,22 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="input-field col s12">
+			<div class="input-field col s6">
 				<input type="text" id="name" name="name" value="{{ old('name') }}">
 				<label for="name">Nombre del producto</label>
 			</div>
+			<div class="input-field col s6">
+				<select name="category">
+					@foreach( $categorias as $c )
+					<option value="{{ $c->id }}">{{ $c->name }}</option>}
+					@endforeach
+				</select>
+				<label>Categorías</label>
+			</div>
 		</div>
 		<div class="row">
-			<input type="text" name="image" value="{{ old('image') }}">
-			<input type="text" name="images" value="{{ old('images') }}">
+			<input type="hidden" name="image" value="{{ old('image') }}">
+			<input type="hidden" name="images" value="{{ old('images') }}">
 		</div>
 		<div class="row">
 			<div class="input-field col s12">

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="charset" content="utf8">
 	<title>{{$title}}</title>
 </head>
 <body>

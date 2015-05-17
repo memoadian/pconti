@@ -13,7 +13,7 @@
 			{{$producto->description}}<br>
 			{{$producto->sku}}<br>
 			{{$producto->price}}<br>
-			{{$producto->category}}<br>
+			{{$producto->categoria->name}}<br>
 			{{$producto->stock}}<br>
 			{{$producto->quantity}}<br>
 		@endforeach

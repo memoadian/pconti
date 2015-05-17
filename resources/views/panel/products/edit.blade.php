@@ -23,7 +23,7 @@
 		<!-- Manejo de errores -->
 		<input type="file" id="file" name="file" class="hidden">
 
-		<form action="{{url('appanel/producto/agregando')}}" method="post" class="col s12">
+		<form action="{{ url('appanel/producto/editando/'.$p->id) }}" method="post" class="col s12">
 			<div class="row">
 				<div class="col s12 m12 l6">
 					<div id="droppeable" class="card-panel grey lighten-5 z-depth-1 upload">
@@ -47,17 +47,33 @@
 			</div>
 			<div class="row">
 				<div class="imagenes">
-					{{ $p->images }}
+					
 				</div>
 			</div>
 			<div class="row">
-				<div class="input-field col s12">
+				<div class="input-field col s6">
 					<input type="text" id="name" name="name" value="{{ $p->name }}">
 					<label for="name">Nombre del producto</label>
 				</div>
+				<div class="input-field col s6">
+					<select name="category">
+						@foreach( $categorias as $c )
+							@if( $p->category == $c->id )
+							<option value="{{ $c->id }}" selected>{{ $c->name }}</option>}
+							@else
+							<option value="{{ $c->id }}">{{ $c->name }}</option>}
+							@endif
+						@endforeach
+					</select>
+					<label>Categorías</label>
+				</div>
 			</div>
 			<div class="row">
-				<input type="text" name="image" value="{{ asset('uploads/sq/'.$p->image.'_'.$p->id) }}">
+				@if( !empty($p->image) )
+				<input type="hidden" name="image" value="{{ asset('uploads/sq/'.$p->image.'_'.$p->id) }}">
+				@else
+				<input type="hidden" name="image" value="">
+				@endif
 				<?php
 					$imgs = array();
 					foreach( $p->imgs as $img ){
@@ -67,7 +83,7 @@
 					}
 					$value = implode(',', $imgs);
 				?>
-				<input type="text" name="images" value="{{ $value }}">
+				<input type="hidden" name="images" value="{{ $value }}">
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
@@ -94,7 +110,11 @@
 					</label><br><br>
 					<label>
 						No
+						@if( $p->stock == 0 )
+						<input type="checkbox" name="stock">
+						@else
 						<input type="checkbox" name="stock" checked>
+						@endif
 						<span class="lever"></span>
 						Si
 					</label>
@@ -108,7 +128,7 @@
 			</div>
 			<div class="row">
 				<div class="col s6 offset-s6">
-					<button class="btn waves-effect waves-light" type="submit" name="action">Agregar producto
+					<button class="btn waves-effect waves-light" type="submit" name="action">Guardar Cambios
 						<i class="mdi-content-send right"></i>
 					</button>
 				</div>
@@ -128,6 +148,8 @@ window.onload = function(){
 				arraySrcs = v.split('_');
 				createImage(arraySrcs[1], arraySrcs[0], false);
 			});
+		}else{
+			$('[name="image"]').val('');
 		}
 
 		function createImage(src, id, principal){
@@ -152,7 +174,7 @@ window.onload = function(){
 			if( $('[name="image"]').val() != '' && $('[name="images"]').val() != ''){
 				active = $('[name="image"]').val();
 				active = active.split('_');
-				$('img[src="'+active[0]+'"]').siblings('.principal').addClass('active');
+				$('img[src="'+active[0]+'"]').siblings('.principal').addClass('active').parent().addClass('active');
 			}
 		}
 	});

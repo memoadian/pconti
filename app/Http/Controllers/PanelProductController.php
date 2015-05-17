@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Validator;
 use Input;
 use App\Product;
+use App\Category;
+use App\Classes\Cleaner;
 
 /**
 * Controlador CRUD productos
@@ -24,8 +26,10 @@ class PanelProductController extends Controller {
 	}
 
 	public function add(){
+		$categorias = Category::all();
 		$data = array(
 			'title' => 'Agregar un nuevo producto',
+			'categorias' => $categorias,
 		);
 		return view('panel/products/add', $data);
 	}
@@ -53,8 +57,9 @@ class PanelProductController extends Controller {
 				//'description.required' => 'La descripción es obligatoria',
 				'sku.required' => 'La clave del producto es obligatoria',
 				'price.required' => 'El precio es obligatorio',
+				'price.integer' => 'El precio sólo admite números',
 				'category.required' => 'Necesitas asignar una categoría al producto',
-				'quantity.required' => 'Cantidad de productos disponibles',
+				'quantity.required' => 'La cantidad de productos es obligatoria',
 				'quantity.integer' => 'La cantidad debe ser un número entero'
 			)
 		);
@@ -66,20 +71,27 @@ class PanelProductController extends Controller {
 				->withInput();
 		}else{
 			$name = Input::get('name');
-			$slug = $this->cleaner($name);
+			$slug = Cleaner::url($name);
+			$image = Input::get('image');
+
+			$image = explode('_', $image);
+			$image = $image[0];
+			$image = explode('/', $image);
+			$image = end($image);
 
 			$producto = new Product;
 			$producto->name = Input::get('name');
 			$producto->slug = $slug;
 			$producto->description = Input::get('description');
-			$producto->image = Input::get('image');
+			$producto->image = $image;
 			$producto->price = Input::get('price');
 			$producto->sku = Input::get('sku');
 			$producto->quantity = Input::get('quantity');
-			if(null !== Input::get('status')){
-				$producto->stock = 0;
-			}else{
+			$producto->category = Input::get('category_id');
+			if(null !== Input::get('stock')){
 				$producto->stock = 1;
+			}else{
+				$producto->stock = 0;
 			}
 			$producto->save();
 
@@ -92,22 +104,28 @@ class PanelProductController extends Controller {
 			if(!empty($images)){
 				$images = explode(',', $images);
 				foreach($images as $img){
-					$producto->imgs()->attach($img);
+					$img = explode('_', $img);
+					//$producto->imgs()->attach($img[0]);
+					$producto->imgs()->sync([$img[0]], false);
 				}
 			}
+
+			return redirect('appanel/productos');
 		}
 	}
 
 	public function edit($id){
+		$categorias = Category::all();
 		$p = Product::find($id);
 		$data = array(
 			'title' => 'Editar Producto',
+			'categorias' => $categorias,
 			'p' => $p,
 		);
 		return view('panel/products/edit', $data);
 	}
 
-	public function doedit(){
+	public function doedit($id){
 		$validator = Validator::make(
 			array(
 				'name' => Input::get('name'),
@@ -122,7 +140,7 @@ class PanelProductController extends Controller {
 				//'description' => 'required',
 				'sku' => 'required',
 				'price' => 'required',
-				'category' => 'required',
+				//'category' => 'required',
 				'quantity' => ['required', 'integer'],
 			),
 			array(
@@ -131,47 +149,53 @@ class PanelProductController extends Controller {
 				'sku.required' => 'La clave del producto es obligatoria',
 				'price.required' => 'El precio es obligatorio',
 				'category.required' => 'Necesitas asignar una categoría al producto',
-				'quantity.required' => 'Cantidad de productos disponibles',
+				'quantity.required' => 'La cantidad de productos es obligatoria',
 				'quantity.integer' => 'La cantidad debe ser un número entero'
 			)
 		);
 
 		if ($validator->fails()){
 			$messages = $validator->messages();
-			return redirect('appanel/producto/agregar')
+			return redirect('appanel/producto/editar/'.$id)
 				->withErrors($validator)
 				->withInput();
 		}else{
 			$name = Input::get('name');
-			$slug = $this->cleaner($name);
+			$slug = Cleaner::url($name);
+			$image = Input::get('image');
 
-			$producto = new Product;
+			$image = explode('_', $image);
+			$image = $image[0];
+			$image = explode('/', $image);
+			$image = end($image);
+
+			$producto = Product::find($id);
 			$producto->name = Input::get('name');
 			$producto->slug = $slug;
 			$producto->description = Input::get('description');
-			$producto->image = Input::get('image');
+			$producto->image = $image;
 			$producto->price = Input::get('price');
 			$producto->sku = Input::get('sku');
 			$producto->quantity = Input::get('quantity');
-			if(null !== Input::get('status')){
-				$producto->stock = 0;
-			}else{
+			$producto->category = Input::get('category_id');
+			if(null !== Input::get('stock')){
 				$producto->stock = 1;
+			}else{
+				$producto->stock = 0;
 			}
 			$producto->save();
-
-			//agregamos la imagenes extras
-			$id = $producto->id;
-
-			$producto = Product::find($id);
 
 			$images = Input::get('images');
 			if(!empty($images)){
 				$images = explode(',', $images);
 				foreach($images as $img){
-					$producto->imgs()->attach($img);
+					$img = explode('_', $img);
+					//$producto->imgs()->attach($img[0]);
+					$producto->imgs()->sync([$img[0]], false);
 				}
 			}
+
+			return redirect('appanel/producto/editar/'.$id);
 		}
 	}
 
@@ -179,18 +203,6 @@ class PanelProductController extends Controller {
 
 	}
 
-	function cleaner($str, $replace=array(), $delimiter='-') {
-		if( !empty($replace) ) {
-			$str = str_replace((array)$replace, ' ', $str);
-		}
-
-		$clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
-		$clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
-		$clean = strtolower(trim($clean, '-'));
-		$clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
-
-		return $clean;
-	}
 }
 
 ?>

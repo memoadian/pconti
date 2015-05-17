@@ -2,6 +2,13 @@ $(document).ready(function(){
 	burl = 'http://pconti.dev/appanel/'
 	uploads = 'http://pconti.dev/'
 
+	$('.side-nav').slicknav({
+		label: '',
+	});
+
+	title = $('.page-title').text();
+	$('.slicknav_menu').prepend('<p>'+title+'</p>');
+
 	$('#selectable .btn').click(function(e){
 		e.preventDefault();
 		var cerrar = $('<p>', {class: 'close'});
@@ -70,7 +77,8 @@ $(document).ready(function(){
 		fillImages();
 	});
 
-	$(document).on('click', '.remove', function(){
+	$(document).on('click', '.remove', function(e){
+		e.stopPropagation();
 		$(this).closest('div').remove();
 		var principal = $(this).closest('.product-img').find('.principal');
 		if(principal.hasClass('active')){
@@ -80,13 +88,13 @@ $(document).ready(function(){
 		fillImages();
 	});
 
-	$(document).on('click', '.principal', function(){
+	$(document).on('click', '.product-img', function(){
 		$('.principal, .product-img').removeClass('active');
-		$(this).toggleClass('active').closest('div').toggleClass('active');
-		var src = $(this).siblings('img').attr('src');
+		$(this).toggleClass('active').find('.principal').toggleClass('active');
+		var src = $(this).find('img').attr('src');
 
-		var id = $(this).siblings('img').attr('data-id');
-		console.log(id);
+		var id = $(this).find('img').attr('data-id');
+
 		$('[name="image"]').val(src+'_'+id);
 	});
 
@@ -102,4 +110,124 @@ $(document).ready(function(){
 			$('[name="image"]').val('');
 		}
 	}
+
+	$('input[name="price"]').keyup(function(e){
+		unf = $(this).val();
+		if ( 
+			e.which == 48 ||
+			e.which == 49 ||
+			e.which == 50 ||
+			e.which == 51 ||
+			e.which == 52 ||
+			e.which == 53 ||
+			e.which == 54 ||
+			e.which == 55 ||
+			e.which == 56 ||
+			e.which == 57 ||
+			e.which == 96 ||
+			e.which == 97 ||
+			e.which == 98 ||
+			e.which == 99 ||
+			e.which == 100 ||
+			e.which == 101 ||
+			e.which == 102 ||
+			e.which == 103 ||
+			e.which == 104 ||
+			e.which == 105
+			) {
+			if( unf.length > 2 ){
+				var number = numeral(unf).format('0,0[.]00');
+				$(this).val(number);
+			}
+		}
+	});
+
+	$('.delete').click(function(){
+		var id = $(this).attr('data-id');
+		var delItem = $(this);
+		swal({
+			title: '¿Estás seguro?',   
+			text: 'Después de esta acción no podrás recuperar este archivo',
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Si, borrar',
+			cancelButtonText: 'No, cancelar!',
+				closeOnConfirm: false,
+				closeOnCancel: false
+		},function(isConfirm) {
+			if (isConfirm) {
+				$.ajax({
+					url: burl+'imagen/eliminar/'+id,
+				}).done(function(res){
+					$(delItem).closest('.product-img').remove();
+					swal(
+						'¡Eliminada!',
+						res,
+						'success'
+					);
+				});
+			} else {
+				swal(
+					'Cancelado',
+					'El archivo no ha sido borrado',
+					'error'
+				);
+			}
+		});
+	});
+
+	/* Categorías */
+
+	$('input[name="catname"]').keyup(function(e){
+		catname = $(this).val();
+		$('input[name="slug"]').val( slug( catname ) );
+	});
+
+	$('.delete-category').click(function(e){
+		e.preventDefault();
+		var delItem = $(this).closest('.collection-item');
+		var id = $(this).attr('data-id');
+		swal({
+			title: '¿Estás seguro?',   
+			text: 'Los productos de esta categoría, se asignaran a Sin Categoría',
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Si, borrar',
+			cancelButtonText: 'No, cancelar!',
+				closeOnConfirm: false,
+				closeOnCancel: false
+		},function(isConfirm) {
+			if (isConfirm) {
+				$.ajax({
+					url: burl+'categoria/eliminar/'+id,
+				}).done(function(res){
+					$(delItem).remove();
+					swal(
+						'¡Eliminada!',
+						res,
+						'success'
+					);
+				});
+			} else {
+				swal(
+					'Cancelado',
+					'El archivo no ha sido borrado',
+					'error'
+				);
+			}
+		});
+	});
+
+	function slug(str) {
+		if (!arguments.callee.re) {
+			arguments.callee.re = [/[^a-z0-9]+/ig, /^-+|-+$/g];
+		}
+		return str.toLowerCase().replace(arguments.callee.re[0], '-').replace(arguments.callee.re[1],'');
+	}
+
+	$('select').material_select();
 });
