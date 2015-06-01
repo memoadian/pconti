@@ -19,6 +19,12 @@ class Cleaner{
 
 		return $clean;
 	}
+
+	static function excerpt($str, $word_limit){
+		$words = explode(" ",$str);
+		$result = implode(" ", array_splice($words, 0, $word_limit));
+		return $result.'...';
+	}
 }
 
 ?>

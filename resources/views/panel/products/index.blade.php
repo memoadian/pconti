@@ -1,9 +1,14 @@
 @extends('panel/panel')
+
+<?php
+	$cleaner = New \App\Classes\Cleaner;
+?>
+
 @section('fluid-content')
 	<div class="row">
 	@if (!$productos->isEmpty())
 		@foreach ($productos as $p)
-			<div class="col s12 m12 l4">
+			<div class="col s12 m6 l4">
 				<div class="card">
 					<div class="card-image">
 						@if( $p->image != '' )
@@ -15,14 +20,14 @@
 					</div>
 					<div class="card-content">
 						<h5>{{$p->name}}</h5>
-						<p>{{$p->description}}</p>
+						<p>{{ $cleaner->excerpt( $p->description, 5 ) }}</p>
 					</div>
 					<div class="card-action">
 						<a href="{{ url('appanel/producto/editar/'.$p->id) }}" class="btn waves-effect waves-light blue lighten-1">
 							Editar
 							<i class="mdi-image-edit right"></i>
 						</a>
-						<a href="{{ url('/') }}" class="btn waves-effect waves-light red">
+						<a href="#" data-id="{{ $p->id }}" class="btn waves-effect waves-light red delete-product">
 							Borrar
 							<i class="mdi-navigation-cancel right"></i>
 						</a>

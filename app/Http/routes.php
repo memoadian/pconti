@@ -13,23 +13,65 @@
 /*
 * Frontend
 */
-Route::get('/', 'HomeController@index');
+Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index'] );
 
-Route::get('producto', 'ProductoController@index');
+Route::get('/p/{id}/{slug}', 'ProductController@index');
 
-Route::get('buscar', 'BuscarController@index');
+Route::get('buscar', 'SearchController@index');
 
 Route::get('categoria/{categoryName}', 'CategoryController@index');
 
-Route::get('contacto', 'ContactoController@index');
+Route::get('contacto', 'ContactController@index');
 
-Route::get('ubicacion', 'UbicacionController@index');
+Route::get('legal', 'LegalController@index');
 
-Route::get('politicas/{politicName}', 'PoliticasController@index');
+Route::get('pagar', 'CheckoutController@index');
 
-Route::get('pagar', 'PagarController@index');
+Route::get('registro', 'CheckoutController@register');
 
-Route::get('registro', 'RegistroController@index');
+Route::post('registrando', 'CheckoutController@doregister');
+
+Route::post('dologin', 'LoginController@dologin');
+
+Route::get('salir', 'LoginController@logout');
+
+/* MAIL */
+
+Route::get('mail', function(){
+
+	Mail::raw('Text to e-mail', function($message){
+
+		$message->from('me@example.com', 'Laravel');
+
+		$message->to('memoadian@gmail.com');
+
+	});
+
+});
+
+/*
+* Cart
+*/
+
+Route::post('add', 'CartController@add');
+
+Route::get('content', 'CartController@content');
+
+Route::get('total', 'CartController@total');
+
+Route::get('items', 'CartController@items');
+
+Route::get('vaciar', 'CartController@vaciar');
+
+Route::post('remove', 'CartController@remove');
+
+/*
+* Payment
+*/
+
+Route::get('payment', 'PaypalPaymentController@postPayment');
+
+Route::get('payment/status', 'PaypalPaymentController@getPaymentStatus');
 
 /*
 * Backend login/out
@@ -74,6 +116,20 @@ Route::post('appanel/categoria/editando/{id}', 'PanelCategoryController@doedit')
 Route::get('appanel/categoria/eliminar/{id}', 'PanelCategoryController@remove');
 
 /*
+* Tags
+*/
+
+Route::get('appanel/tags', 'PanelTagController@index');
+
+Route::get('appanel/tags/first', 'PanelTagController@first');
+
+Route::get('appanel/tags/json', 'PanelTagController@json');
+
+Route::post('appanel/tag/agregando', 'PanelTagController@doadd');
+
+Route::get('appanel/tag/eliminar/{id}', 'PanelTagController@remove');
+
+/*
 * Backend Users
 */
 
@@ -102,6 +158,14 @@ Route::get('appanel/imagen/editar/{id}', 'PanelImageController@edit');
 Route::post('appanel/imagen/editando/{id}', 'PanelImageController@doedit');
 
 Route::get('appanel/imagen/eliminar/{id}', 'PanelImageController@remove');
+
+/*
+* Backend Config
+*/
+
+Route::get('appanel/configuracion', 'PanelConfigController@index');
+
+Route::post('appanel/configuracion/editando', 'PanelConfigController@doedit');
 
 /* Auth */
 

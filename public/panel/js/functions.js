@@ -6,6 +6,210 @@ $(document).ready(function(){
 		label: '',
 	});
 
+	//tags
+	$('.alf li').click(function(){
+		$(this).addClass('active').siblings().removeClass('active');
+	});
+
+	$('.create-tags').keydown(function(e){
+		if( e.keyCode == 13 ){
+			e.preventDefault();
+		}
+		var active = $('.listags li').filter('.active');
+
+		if( e.keyCode == 40 ){
+			if ( ! active.length || active.is(':last-child') ) {
+				$('.listags li.active').removeClass('active');
+				$('.listags li').eq(0).addClass('active');
+			}else{
+				$('.listags li.active').next().addClass('active').siblings().removeClass('active');
+			}
+		}
+
+		if( e.keyCode == 38 ){
+			if ( ! active.length || active.is(':first-child') ) {
+				$('.listags li.active').removeClass('active');
+				$('.listags li').last().addClass('active');
+			}else{
+				$('.listags li.active').prev().addClass('active').siblings().removeClass('active');
+			}
+		}
+	});
+
+	$('.create-tags').keyup(function(e){
+		if( e.keyCode == 13 ){
+			e.preventDefault();
+			var value = $(this).val()
+
+			if( value.length != '' ){
+				if( $('.listags li.active').length ){
+					var name = $('.listags li.active').find('a').text();
+					var id = $('.listags li.active').attr('data-id');
+					var li = $('<li>', {class: 'tag', 'data-name': name, 'data-id': id});
+					var span = $('<span>');
+					var close = $('<i class="mdi-content-clear closetag right"></i>');
+					span.text(name);
+					
+					span.append(close);
+					li.append(span);
+					$('.tags').append(li);
+					$('.create-tags').val('');
+
+					$('.listags ul').empty();
+
+					fillTags();
+				}else{
+					e.preventDefault();
+					var obj = $(this);
+					$('.create-tags').attr('disabled', 'disabled').css({
+						'background': 'url('+uploads+'panel/imgs/ajax-loader.gif) no-repeat center right',
+					});
+
+					$.ajax({
+						url: burl+'tag/agregando',
+						method: 'post',
+						data: {name: value}
+					}).done(function(res){
+						var li = $('<li>', {class: 'tag', 'data-name': res.name, 'data-id': res.id});
+						var span = $('<span>');
+						var close = $('<i class="mdi-content-clear closetag right"></i>');
+						span.text(res.name);
+						
+						span.append(close);
+						li.append(span);
+						$('.tags').append(li);
+						obj.val('');
+
+						$('.listags ul').empty();
+						$('.create-tags').removeAttr('disabled').css({
+							'background-image': 'none',
+						});
+
+						fillTags();
+					});
+				}
+			}
+		}else if( e.keyCode == 40 || e.keyCode == 38 ){
+			e.preventDefault();
+		}else{
+			var obj = $(this);
+			var value = $(this).val();
+
+			if(value.length >= 2){
+				$.ajax({
+					url: uploads+'tags',
+					method: 'get',
+					data: {search: value}
+				}).done(function(res){
+					$('.listags ul').empty();
+					$.each(res, function(i, v){
+						var a = $('<a>');
+						var li = $('<li>', {class: 'litag', 'data-name': v.name, 'data-id': v.id});
+						
+						a.text(v.name);
+						li.append(a);
+
+						$('.listags ul').append(li);
+
+						$('.listags li').first().addClass('active').siblings().removeClass('active');
+					});
+				});
+			}else{
+				$('.listags ul').empty();
+			}
+		}
+	});
+
+	$(document).on('click', '.litag', function(){
+		var name = $(this).find('a').text();
+		var li = $('<li>', {class: 'tag', 'data-name': name});
+		var span = $('<span>');
+		var close = $('<i class="mdi-content-clear closetag right"></i>');
+		span.text(name);
+		
+		span.append(close);
+		li.append(span);
+		$('.tags').append(li);
+		$('.create-tags').val('');
+
+		$('.listags ul').empty();
+
+		fillTags();
+	});
+
+	$(document).on('click', '.closetag', function(){
+		$(this).closest('li').remove();
+	});
+
+	$(document).on('click', '.removetag', function(){
+		var delItem = $(this).closest('li');
+		var id = $(this).closest('li').attr('data-id');
+
+		remove('Este tag será eliminado de todos los productos relacionados', burl+'tag/eliminar/'+id, delItem, 'El tag no ha sido borrado');
+
+	});
+
+	$('.alf li').click(function(){
+		var value = $(this).text();
+		$.ajax({
+			url: burl+'tags/first',
+			method: 'get',
+			data: {search: value}
+		}).done(function(res){
+			$('.tags').empty();
+			$.each(res, function(i, v){
+				var i = $('<i>', {class: 'mdi-content-clear removetag right'});
+				var span = $('<span>');
+				var li = $('<li>', {'data-name': v.name, 'data-id': v.id});
+				
+				span.text(v.name);
+				span.append(i);
+				li.append(span);
+
+				$('.tags').append(li);
+			});
+		});
+	});
+
+	$('[name="searchtag"]').keyup(function(){
+		var value = $(this).val();
+		if(value.length >= 2){
+			$.ajax({
+				url: burl+'tags/json',
+				method: 'get',
+				data: {search: value}
+			}).done(function(res){
+				$('.tags').empty();
+				$.each(res, function(i, v){
+					var i = $('<i>', {class: 'mdi-content-clear removetag right'});
+					var span = $('<span>');
+					var li = $('<li>', {'data-name': v.name, 'data-id': v.id});
+					
+					span.text(v.name);
+					span.append(i);
+					li.append(span);
+
+					$('.tags').append(li);
+				});
+			});
+		}else{
+			$('.tags').empty();
+		}
+	});
+
+	function fillTags(){
+		tags = $('.tags li');
+		var values = new Array();
+		$.each(tags, function(i, v){
+			var id = $(v).attr('data-id');
+			var name = $(v).attr('data-name');
+			values.push(id+'_'+name);
+		});
+		$('input[name="tags"]').val(values);
+	}
+
+	//endtags
+
 	title = $('.page-title').text();
 	$('.slicknav_menu').prepend('<p>'+title+'</p>');
 
@@ -30,9 +234,11 @@ $(document).ready(function(){
 		});
 
 		var content = $('<div>', {class: 'content'});
+		var paginate = $('<div>', {class: 'paginate'});
 		
 		div.append(cerrar);
 		div.append(content);
+		div.append(paginate)
 		$('body').prepend(div);
 
 		var imgs = new Array;
@@ -40,14 +246,43 @@ $(document).ready(function(){
 			url: burl+'imagenes/json',
 			context: document.body
 		}).done(function(res) {
+			var i = 1;
 			$.each(res, function(i, v){
-				imgs += '<img data-id="'+v.id+'" src="'+uploads+'uploads/sq/'+v.url+'">';
+				if(i == 0){
+					pages = v.pages;
+				}else{
+					imgs += '<img data-id="'+v.id+'" src="'+uploads+'uploads/sq/'+v.url+'">';
+				}
+				i++;
 			});
 			content.append(imgs);
+			paginate.append(pages);
 		});
 
 		//no scroll
 		$('body').css('overflow', 'hidden');
+	});
+
+	$(document).on('click', '.paginate .pagination a', function(e){
+		e.preventDefault();
+		page = $(this).attr('href');
+		var imgs = new Array;
+		$.ajax({
+			url: page,
+			context: document.body
+		}).done(function(res) {
+			var i = 1;
+			$.each(res, function(i, v){
+				if(i == 0){
+					pages = v.pages;
+				}else{
+					imgs += '<img data-id="'+v.id+'" src="'+uploads+'uploads/sq/'+v.url+'">';
+				}
+				i++;
+			});
+			$('.content').html(imgs);
+			$('.paginate').html(pages);
+		});
 	});
 
 	$(document).on('click', '.close', function(){
@@ -111,87 +346,56 @@ $(document).ready(function(){
 		}
 	}
 
-	$('input[name="price"]').keyup(function(e){
+	$('input[name="price"]').focusout(function(e){
 		unf = $(this).val();
-		if ( 
-			e.which == 48 ||
-			e.which == 49 ||
-			e.which == 50 ||
-			e.which == 51 ||
-			e.which == 52 ||
-			e.which == 53 ||
-			e.which == 54 ||
-			e.which == 55 ||
-			e.which == 56 ||
-			e.which == 57 ||
-			e.which == 96 ||
-			e.which == 97 ||
-			e.which == 98 ||
-			e.which == 99 ||
-			e.which == 100 ||
-			e.which == 101 ||
-			e.which == 102 ||
-			e.which == 103 ||
-			e.which == 104 ||
-			e.which == 105
-			) {
-			if( unf.length > 2 ){
-				var number = numeral(unf).format('0,0[.]00');
-				$(this).val(number);
-			}
-		}
+		var number = numeral(unf).format('0,0.00');
+		$(this).val(number);
 	});
-
-	$('.delete').click(function(){
-		var id = $(this).attr('data-id');
-		var delItem = $(this);
-		swal({
-			title: '¿Estás seguro?',   
-			text: 'Después de esta acción no podrás recuperar este archivo',
-			type: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Si, borrar',
-			cancelButtonText: 'No, cancelar!',
-				closeOnConfirm: false,
-				closeOnCancel: false
-		},function(isConfirm) {
-			if (isConfirm) {
-				$.ajax({
-					url: burl+'imagen/eliminar/'+id,
-				}).done(function(res){
-					$(delItem).closest('.product-img').remove();
-					swal(
-						'¡Eliminada!',
-						res,
-						'success'
-					);
-				});
-			} else {
-				swal(
-					'Cancelado',
-					'El archivo no ha sido borrado',
-					'error'
-				);
-			}
-		});
-	});
-
-	/* Categorías */
 
 	$('input[name="catname"]').keyup(function(e){
 		catname = $(this).val();
 		$('input[name="slug"]').val( slug( catname ) );
 	});
 
+	$('.delete').click(function(){
+		var id = $(this).attr('data-id');
+		var delItem = $(this).closest('.product-img');
+
+		remove('Después de esta acción no podrás recuperar este archivo', burl+'imagen/eliminar/'+id, delItem, 'El archivo no ha sido borrado');
+
+	});
+
 	$('.delete-category').click(function(e){
 		e.preventDefault();
 		var delItem = $(this).closest('.collection-item');
 		var id = $(this).attr('data-id');
+
+		remove('Los productos de esta categoría, se asignarán a Sin Categoría', burl+'categoria/eliminar/'+id, delItem, 'Ĺa categoría no ha sido borrada');
+
+	});
+
+	$('.delete-product').click(function(e){
+		e.preventDefault();
+		var delItem = $(this).closest('.card');
+		var id = $(this).attr('data-id');
+
+		remove('Este producto no podrá ser recuperado', burl+'producto/eliminar/'+id, delItem, 'El usuario no ha sido borrado');
+
+	});
+
+	$('.delete-user').click(function(e){
+		e.preventDefault();
+		var delItem = $(this).closest('.collection-item');
+		var id = $(this).attr('data-id');
+
+		remove('Este usuario no podrá ser recuperado', burl+'usuario/eliminar/'+id, delItem, 'El usuario no ha sido borrado');
+
+	});
+
+	function remove(text, url, delItem, cancel){
 		swal({
-			title: '¿Estás seguro?',   
-			text: 'Los productos de esta categoría, se asignaran a Sin Categoría',
+			title: '¿Estás seguro?',
+			text: text,
 			type: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
@@ -203,31 +407,51 @@ $(document).ready(function(){
 		},function(isConfirm) {
 			if (isConfirm) {
 				$.ajax({
-					url: burl+'categoria/eliminar/'+id,
+					url: url,
 				}).done(function(res){
-					$(delItem).remove();
-					swal(
-						'¡Eliminada!',
-						res,
-						'success'
-					);
+					if(res == "No tienes permisos para realizar esta acción"){
+						swal(
+							'Error',
+							res,
+							'error'
+						);
+					}else{
+						$(delItem).remove();
+						swal(
+							'¡Eliminado!',
+							res,
+							'success'
+						);
+					}
 				});
 			} else {
 				swal(
 					'Cancelado',
-					'El archivo no ha sido borrado',
+					cancel,
 					'error'
 				);
 			}
 		});
-	});
+	}
 
 	function slug(str) {
-		if (!arguments.callee.re) {
-			arguments.callee.re = [/[^a-z0-9]+/ig, /^-+|-+$/g];
+		str = str.replace(/^\s+|\s+$/g, ''); // trim
+		str = str.toLowerCase();
+
+		// remove accents, swap ñ for n, etc
+		var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+		var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+		for (var i=0, l=from.length ; i<l ; i++) {
+		str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
 		}
-		return str.toLowerCase().replace(arguments.callee.re[0], '-').replace(arguments.callee.re[1],'');
+
+		str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+		.replace(/\s+/g, '-') // collapse whitespace and replace by -
+		.replace(/-+/g, '-'); // collapse dashes
+
+		return str;
 	}
 
 	$('select').material_select();
+
 });

@@ -2,7 +2,7 @@
 @section('content')
 	<div class="row">
 		<div class="col s12 m12 l6">
-			<form action="{{ asset( 'appanel/categoria/editando'.$categoria->id ) }}" method="post">
+			<form action="{{ asset( 'appanel/categoria/editando/'.$categoria->id ) }}" method="post">
 				<div class="row">
 					<div class="input-field col s12">
 						<input id="catname" name="catname" type="text" value="{{ $categoria->name }}">

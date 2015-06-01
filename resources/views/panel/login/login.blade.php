@@ -13,7 +13,7 @@
 							<label for="username">Nombre de usuario</label>
 						</div>
 						<div class="input-field col s12">
-							<input id="password" type="password" name="password" class="validate" placeholder="">
+							<input id="password" type="password" name="password">
 							<label for="password">Contraseña</label>
 						</div>
 						<div class="input-field col s8 m8 l5 offset-s4 offset-m4 offset-l7">

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Product;
+use App\Category;
+use App\Classes\Cleaner;
 
 class HomeController extends Controller {
 
@@ -21,10 +23,21 @@ class HomeController extends Controller {
 	 */
 	public function index(){
 		$data = array(
+			'categorias' => Category::all(),
 			'productos' => Product::all(),
 			'title' => 'Peleteria Continental',
 		);
 		return view('front/home', $data);
 	}
+
+	public function product($slug){
+
+	}
+
+	public function search(){
+
+	}
+
+
 
 }

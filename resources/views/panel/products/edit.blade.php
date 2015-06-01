@@ -58,7 +58,7 @@
 				<div class="input-field col s6">
 					<select name="category">
 						@foreach( $categorias as $c )
-							@if( $p->category == $c->id )
+							@if( $p->id_category == $c->id )
 							<option value="{{ $c->id }}" selected>{{ $c->name }}</option>}
 							@else
 							<option value="{{ $c->id }}">{{ $c->name }}</option>}
@@ -90,6 +90,38 @@
 					<textarea name="description" class="materialize-textarea">{{ $p->description }}</textarea>
 					<label for="description">Description</label>
 				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+					<?php 
+						$string = '';
+						$count = count( $p->tags );
+						$i = 1;
+					?>
+					@foreach( $p->tags as $t )
+						<?php
+							if( $i < $count  ){
+								$string .= $t->id.'_'.$t->name.',';
+							}else{
+								$string .= $t->id.'_'.$t->name;
+							}
+							$i++;
+						?>
+					@endforeach
+					<input type="hidden" name="tags" value="{{ $string }}">
+					<input type="text" class="create-tags" name="create-tags">
+					<label for="create-tags">Tags</label>
+				</div>
+				<div class="listags">
+					<ul>
+
+					</ul>
+				</div>
+			</div>
+			<div class="row">
+				<ul class="tags">
+					
+				</ul>
 			</div>
 			<div class="row">
 				<div class="input-field col s6">
@@ -127,6 +159,26 @@
 				</div>
 			</div>
 			<div class="row">
+				<div class="col s12">
+					<p>
+						@if( $p->supply == 0 )
+							<input type="checkbox" id="supply" name="supply" />
+						@else
+							<input type="checkbox" id="supply" name="supply" checked />
+						@endif
+						<label for="supply">Oferta</label>
+					</p>
+					<p>
+						@if( $p->outstanding == 0 )
+							<input type="checkbox" id="outstanding" name="outstanding" />
+						@else
+							<input type="checkbox" id="outstanding" name="outstanding" checked />
+						@endif
+						<label for="outstanding">Destacado</label>
+					</p>
+				</div>
+			</div>
+			<div class="row">
 				<div class="col s6 offset-s6">
 					<button class="btn waves-effect waves-light" type="submit" name="action">Guardar Cambios
 						<i class="mdi-content-send right"></i>
@@ -150,6 +202,15 @@ window.onload = function(){
 			});
 		}else{
 			$('[name="image"]').val('');
+		}
+
+		if( $('[name="tags"]').val() != '' ){
+			values = $('[name="tags"]').val();
+			arrayValues = values.split(',');
+			$.each(arrayValues, function(i, v){
+				arraySrcs = v.split('_');
+				createTag(arraySrcs[1], arraySrcs[0]);
+			});
 		}
 
 		function createImage(src, id, principal){
@@ -176,6 +237,17 @@ window.onload = function(){
 				active = active.split('_');
 				$('img[src="'+active[0]+'"]').siblings('.principal').addClass('active').parent().addClass('active');
 			}
+		}
+
+		function createTag(name, id){
+			var li = $('<li>', {class: 'tag', 'data-name': name, 'data-id': id});
+			var span = $('<span>');
+			var close = $('<i class="mdi-content-clear closetag right"></i>');
+			span.text(name);
+			
+			span.append(close);
+			li.append(span);
+			$('.tags').append(li);
 		}
 	});
 }

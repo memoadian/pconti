@@ -16,7 +16,7 @@ class PanelImageController extends Controller{
 	}
 
 	public function index(){
-		$images = Picture::paginate(50);
+		$images = Picture::paginate(10);
 		$data = array(
 			'title' => 'Galería de imágenes',
 			'images' => $images
@@ -125,12 +125,15 @@ class PanelImageController extends Controller{
 	}
 
 	public function picsJSON(){
-		$pictures = Picture::all();
+		$pictures = Picture::paginate(50);
 		$res = array();
 		foreach($pictures as $p){
+			$res[0] = array(
+				'pages' => $pictures->render(),
+			);
 			$res[] = array(
 				'id' => $p->id,
-				'url' => $p->name.'-'.$p->md5.'.'.$p->ext
+				'url' => $p->name.'-'.$p->md5.'.'.$p->ext,
 			);
 		}
 		return response()->json($res);

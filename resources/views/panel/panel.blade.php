@@ -6,6 +6,7 @@
 	<meta name="_token" content="{{ csrf_token() }}" />
 
 	<!-- STYLES -->
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="{{asset('panel/css/sweetalert2.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('panel/css/materialize.css')}}">
 
@@ -24,6 +25,13 @@
 	@section('sidebar')
 		<header>
 			<ul class="side-nav fixed">
+				<li class="bold">
+					<a href="{{url('/')}}" target="_blanck" class="waves-effect waves-teal">
+						<i class="mdi-action-shopping-basket"></i> Tienda
+					</a>
+				</li>
+
+			<li class="separator"></li>
 
 				<li class="bold">
 					<a href="{{url('/appanel')}}" class="waves-effect waves-teal">
@@ -40,9 +48,11 @@
 						<i class="mdi-content-sort"></i> Categorias
 					</a>
 				</li>
-
-			<li class="separator"></li>
-
+				<li class="bold">
+					<a href="{{url('appanel/tags')}}" class="waves-effect waves-teal">
+						<i class="mdi-action-loyalty"></i> Tags
+					</a>
+				</li>
 				<li class="bold">
 					<a href="{{url('appanel/imagenes')}}" class="waves-effect waves-teal">
 						<i class="mdi-image-camera-alt"></i> Imágenes
@@ -59,6 +69,11 @@
 				<li class="bold">
 					<a href="{{url('appanel/clientes')}}" class="waves-effect waves-teal">
 						<i class="mdi-editor-attach-money"></i> Clientes
+					</a>
+				</li>
+				<li class="bold">
+					<a href="{{url('appanel/configuracion')}}" class="waves-effect waves-teal">
+						<i class="mdi-action-settings"></i> Configuración
 					</a>
 				</li>
 

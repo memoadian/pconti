@@ -22,25 +22,25 @@
 		<form action="{{ asset( 'appanel/usuario/agregando' ) }}" method="post">
 			<div class="row">
 				<div class="input-field col s12">
-					<input id="username" name="username" type="text" value="">
+					<input id="username" name="username" type="text" value="{{ old('username') }}">
 					<label for="username">Nombre de Usuario</label>
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
-					<input id="mail" name="mail" type="text" value="">
-					<label for="mail">Correo</label>
+					<input id="email" name="email" type="text" value="{{ old('email') }}">
+					<label for="email">Correo</label>
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
-					<input id="name" name="name" type="text" value="">
+					<input id="name" name="name" type="text" value="{{ old('name') }}">
 					<label for="name">Nombre</label>
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
-					<input id="surname" name="surname" type="text" value="">
+					<input id="surname" name="surname" type="text" value="{{ old('surname') }}">
 					<label for="surname">Apellido</label>
 				</div>
 			</div>
@@ -51,83 +51,30 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col s6 m6 l6">
-					<label>Crear/Editar Usuarios</label>
-				</div>
-				<div class="switch col s6 m6 l6">
-					<label class="right">
-						No
-						<input type="checkbox" name="stock">
-						<span class="lever"></span>
-						Si
-					</label>
+				<div class="input-field col s12">
+					<input id="repass" name="repass" type="password" value="">
+					<label for="repass">Repetir Contraseña</label>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col s6 m6 l6">
-					<label>Borrar Usuarios</label>
+
+			<!-- PERMISOS -->
+
+			@foreach( $permisos as $p )
+				<div class="row">
+					<div class="col s6 m6 l6">
+						<label>{{ $p->name }}</label>
+					</div>
+					<div class="switch col s6 m6 l6">
+						<label class="right">
+							No
+							<input type="checkbox" name="permits[]" value="{{ $p->id }}">
+							<span class="lever"></span>
+							Si
+						</label>
+					</div>
 				</div>
-				<div class="switch col s6 m6 l6">
-					<label class="right">
-						No
-						<input type="checkbox" name="stock">
-						<span class="lever"></span>
-						Si
-					</label>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col s6 m6 l6">
-					<label>Crear/Editar Productos</label>
-				</div>
-				<div class="switch col s6 m6 l6">
-					<label class="right">
-						No
-						<input type="checkbox" name="stock">
-						<span class="lever"></span>
-						Si
-					</label>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col s6 m6 l6">
-					<label>Borrar Productos</label>
-				</div>
-				<div class="switch col s6 m6 l6">
-					<label class="right">
-						No
-						<input type="checkbox" name="stock">
-						<span class="lever"></span>
-						Si
-					</label>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col s6 m6 l6">
-					<label>Crear/Editar Categorías</label>
-				</div>
-				<div class="switch col s6 m6 l6">
-					<label class="right">
-						No
-						<input type="checkbox" name="stock">
-						<span class="lever"></span>
-						Si
-					</label>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col s6 m6 l6">
-					<label>Borrar Categorías</label>
-				</div>
-				<div class="switch col s6 m6 l6">
-					<label class="right">
-						No
-						<input type="checkbox" name="stock">
-						<span class="lever"></span>
-						Si
-					</label>
-				</div>
-			</div>
+			@endforeach
+
 			<div class="row">
 				<div class="col s12">
 					<button class="btn waves-effect waves-light right" type="submit" name="action">Agregar
@@ -146,7 +93,7 @@
 					{{ $u->name }}
 				</p>
 				@if( $u->id != 1 )
-				<a href="{{ url('/') }}" class="btn-floating red delete-category">
+				<a href="{{ url('/') }}" data-id="{{ $u->id }}" class="btn-floating red delete-user">
 					<i class="mdi-navigation-close"></i>
 				</a>
 				@endif
