@@ -35,20 +35,41 @@ $(document).ready(function(){
 			});
 
 			$('.pagar').css('visibility', 'visible');
+
+			swal({
+				title: 'Producto Añadido',
+				html: '<img src="'+baseUrl+'uploads/sq/'+image+'"><p class="pname">'+name+'</p><p class="pprice">$'+price+'</p>',
+				type: 'success',
+				timer: 5000
+			});
 		});
 	});
 
-	$('.boxes').hover(function(){
-		$('.popcart').stop(true, false).slideDown(300);
-	}, function(){
-		$('.popcart').stop(true, false).slideUp(300);
-	});
+	/**/
 
-	$('.profile').hover(function(){
-		$('.poplogin').stop(true, false).slideDown(300);
-	}, function(){
-		$('.poplogin').stop(true, false).slideUp(300);
-	});
+	if( $(window).width() < 900 ){
+		$('.boxes').click(function(){
+			$('.popcart').slideToggle(300);
+		});
+
+		$('.profile').click(function(){
+			$('.poplogin').slideToggle(300);
+		});
+	}else{
+		$('.boxes').hover(function(){
+			$('.popcart').stop(true, false).slideDown(300);
+		}, function(){
+			$('.popcart').stop(true, false).slideUp(300);
+		});
+
+		$('.profile').hover(function(){
+			$('.poplogin').stop(true, false).slideDown(300);
+		}, function(){
+			$('.poplogin').stop(true, false).slideUp(300);
+		});
+	}
+
+	/**/
 
 	$('.categories').click( function(){
 		$('ul', this).slideToggle(200);
@@ -120,7 +141,6 @@ $(document).ready(function(){
 			url: baseUrl+'content',
 			method: 'GET',
 		}).done(function(res){
-			console.log($.isEmptyObject(res));
 			if( $.isEmptyObject(res) === true ){
 				
 			}else{
@@ -162,6 +182,16 @@ $(document).ready(function(){
 			slideshow: false,
 			animationLoop: true,
 			sync: "#carousel"
+		});
+
+		$('.flexslider').flexslider({
+			controlNav: false
+		});
+
+		$('.menu').slicknav({
+			label: 'MENÚ',
+			duration: 300,
+			prependTo: '.menu-movil'
 		});
 	});
 });

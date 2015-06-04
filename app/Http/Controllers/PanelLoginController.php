@@ -8,10 +8,14 @@ use App\User;
 class PanelLoginController extends Controller{
 
 	public function index(){
-		$data = array(
-			'title' => 'Login de Usaurio',
-		);
-		return view('panel/login/login', $data);
+		if( Auth::check() ){
+			return redirect('appanel');
+		}else{
+			$data = array(
+				'title' => 'Login de Usaurio',
+			);
+			return view('panel/login/login', $data);
+		}
 	}
 
 	public function dologin(){

@@ -8,8 +8,9 @@
 				<ul class="slides">
 					@foreach( $p->imgs as $img)
 					<li>
-						<span class="helper"></span>
-						<img class="img-responsive" src="{{ asset( 'uploads/medium/'.$img->name.'-'.$img->md5.'.'.$img->ext) }}" alt=""/>
+						<a href="{{ asset('uploads/'.$img->name.'-'.$img->md5.'.'.$img->ext) }}" data-lightbox="example-set">
+							<img class="img-responsive" src="{{ asset( 'uploads/medium/'.$img->name.'-'.$img->md5.'.'.$img->ext) }}" alt=""/>
+						</a>
 					</li>
 					@endforeach
 				</ul>
@@ -34,7 +35,7 @@
 			<div class="desc">
 				{{ $p->description }}
 			</div>
-			<p>${{ $p->price }}</p>
+			<p class="single-price">${{ $p->price }}</p>
 
 			<p>
 				<a href="{{ url('/categoria/'.$p->categoria->slug) }}" title="">

@@ -18,7 +18,7 @@ class PanelTagController extends Controller{
 	}
 
 	public function index(){
-		$tags = Tag::orderBy('name', 'asc')->paginate(1);
+		$tags = Tag::orderBy('name', 'asc')->paginate(50);
 		$data = array(
 			'title' => 'Tags',
 			'tags' => $tags,

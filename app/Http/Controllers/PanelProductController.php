@@ -29,7 +29,7 @@ class PanelProductController extends Controller {
 	public function add(){
 		$acc = Check::check(Auth::user()->permisos, 3);
 
-		if($acc){
+		if( $acc || Auth::user()->rol == 1 ){
 			$categorias = Category::all();
 			$data = array(
 				'title' => 'Agregar un nuevo producto',
@@ -44,7 +44,7 @@ class PanelProductController extends Controller {
 	public function doadd(){
 		$acc = Check::check(Auth::user()->permisos, 3);
 
-		if($acc){
+		if( $acc || Auth::user()->rol == 1 ){
 			$validator = Validator::make(
 				array(
 					'name' => Input::get('name'),
@@ -157,7 +157,7 @@ class PanelProductController extends Controller {
 	public function edit($id){
 		$acc = Check::check(Auth::user()->permisos, 3);
 
-		if($acc){
+		if( $acc || Auth::user()->rol == 1 ){
 			$categorias = Category::all();
 			$p = Product::find($id);
 			$data = array(
@@ -174,7 +174,7 @@ class PanelProductController extends Controller {
 	public function doedit($id){
 		$acc = Check::check(Auth::user()->permisos, 3);
 
-		if($acc){
+		if( $acc || Auth::user()->rol == 1 ){
 			$validator = Validator::make(
 				array(
 					'name' => Input::get('name'),
@@ -283,7 +283,7 @@ class PanelProductController extends Controller {
 	public function remove($id){
 		$acc = Check::check(Auth::user()->permisos, 4);
 
-		if($acc){
+		if( $acc || Auth::user()->rol == 1 ){
 			$producto = Product::find($id);
 			$producto->imgs()->detach();
 			$producto->delete();

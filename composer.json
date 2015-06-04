@@ -9,7 +9,9 @@
 		"gloudemans/shoppingcart": "dev-master",
 		"intervention/image": "^2.2",
 		"paypal/rest-api-sdk-php": "*",
-		"nicolaslopezj/searchable": "1.*"
+		"nicolaslopezj/searchable": "1.*",
+		"guzzlehttp/guzzle": "~5.0",
+		"greggilbert/recaptcha": "dev-master"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",

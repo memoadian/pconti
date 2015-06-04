@@ -13,13 +13,7 @@ class PanelController extends Controller{
 		$this->middleware('auth');
 	}
 
-	public function index(){
-		$data = array(
-			'title' => 'Panel de control',
-		);
 
-		return view('panel/panel', $data);
-	}
 
 }
 

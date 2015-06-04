@@ -21,11 +21,13 @@
 				<!-- header -->
 				<header>
 					<div class="col-xs-12 col-md-3">
-						<h1 class="logo">
-							<a href="" title="">
-								<img class="img-responsive" src="{{ asset('imgs/logo_conti.png') }}" alt="">
-							</a>
-						</h1>
+						<div class="row">
+							<h1 class="logo">
+								<a href="" title="">
+									<img class="img-responsive" src="{{ asset('imgs/logo_conti.png') }}" alt="">
+								</a>
+							</h1>
+						</div>
 					</div>
 					<div class="col-xs-12 col-md-9">
 						<nav>
@@ -46,6 +48,9 @@
 									<a href="{{ url('/registro') }}">Registro</a>
 								</li>
 							</ul>
+							<div class="row">
+								<div class="menu-movil"></div>
+							</div>
 						</nav>
 					</div>
 					<div class="profile">
@@ -54,7 +59,7 @@
 							<div class="poplogin">
 								@if( Auth::check() )
 								Bienvenido {{ Auth::user()->name }}
-								<a class="pagar" href="{{ url('/salir') }}" title="">SALIR</a>
+								<a class="logout" href="{{ url('/salir') }}" title="">SALIR</a>
 								@else
 								<form action="{{ url('dologin') }}" method="post" accept-charset="utf-8">
 									<label for="">E-mail</label>
@@ -144,22 +149,27 @@
 						<span class="siguenos">SIGUENOS</span>
 						<ul class="social">
 							<li>
-								<a href="{{ $config->getConfig()->facebook }}">
-									F
+								<a class="facebook" href="{{ $config->getConfig()->facebook }}">
+									<i class="flaticon-facebook55"></i>
 								</a>
 							</li>
 							<li>
-								<a href="{{ $config->getConfig()->twitter }}">
-									T
+								<a class="twitter" href="{{ $config->getConfig()->twitter }}">
+									<i class="flaticon-twitter1"></i>
 								</a>
 							</li>
 							<li>
-								<a href="{{ $config->getConfig()->gplus }}">
-									G
+								<a class="gplus" href="{{ $config->getConfig()->gplus }}">
+									<i class="flaticon-googleplus1"></i>
 								</a>
 							</li>
 						</ul>
 					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="copyright">
+					Desarrollado por <a href="http://ambmultimedia.com.mx">AMB Multimedia</a> para <a href="http://pconti.com">Peletería Continental</a>
 				</div>
 			</div>
 		</footer>
@@ -167,10 +177,63 @@
 </body>
 	<!-- SCRIPTS -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
 	<script src="{{ asset('js/owl.carousel.min.js') }}"></script>
 	<script src="{{ asset('js/flexslider.min.js') }}"></script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
+	<script src="{{ asset('js/lightbox.min.js') }}"></script>
+	<script src="{{ asset('panel/js/sweetalert2.js') }}"></script>
+	<script src="{{ asset('panel/js/slicknav.js') }}"></script>
 	<script src="{{ asset('js/functions.js') }}"></script>
+
+	@if( Session::has('success') )
+	<script>
+		swal({
+			title: 'Pago realizado',
+			html: 'Se ha realizado el pago con éxito,<br> en breve atenderamos tu solicitud',
+			type: 'success',
+		});
+	</script>
+	@endif
+
+	@if( Session::has('register') )
+	<script>
+		swal({
+			title: 'Registro exitoso',
+			html: 'Ahora puedes pagar tu pedido',
+			type: 'success',
+		});
+	</script>
+	@endif
+
+	@if( Session::has('edit') )
+	<script>
+		swal({
+			title: 'Cambios realizados',
+			html: 'Los cambios se han guardado',
+			type: 'success',
+		});
+	</script>
+	@endif
+
+	@if( Session::has('mensaje') )
+	<script>
+		swal({
+			title: 'Mensaje enviado',
+			html: 'Gracias por contactarnos, te atenderemos en breve',
+			type: 'success',
+		});
+	</script>
+	@endif	
+
+	@if( Session::has('repass') )
+	<script>
+		swal({
+			title: 'Contraseña Editada',
+			html: 'La contraseña ha sido cambiada ahora puedes loguearte de nuevo',
+			type: 'success',
+		});
+	</script>
+	@endif	
 
 	<script>
 	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

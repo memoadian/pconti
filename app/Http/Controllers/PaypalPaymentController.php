@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\Amount;
@@ -15,8 +16,11 @@ use PayPal\Api\PaymentExecution;
 use PayPal\Api\Transaction;
 
 use App\Config;
+use App\Order;
 use Session;
 use Input;
+use Auth;
+use Mail;
 use App\Http\Controllers\CartController as Cart;
 
 /**
@@ -141,8 +145,35 @@ class PaypalPaymentController extends Controller{
 		//echo '<pre>';print_r($result);echo '</pre>';exit; // DEBUG RESULT, remove it later
 
 		if ($result->getState() == 'approved') { // payment made
+			$cart = new Cart;
+			$order = new Order;
+
+			$array = $cart->content();
+			$orden = '';
+			foreach($array as $a){
+				$url = url('/p/'.$a->id.'/'.$a->options->slug);
+				$orden .=  '<p><a target="_blanck" href="'.$url.'">'.$a->name.'</a> - <span> Cantidad: '.$a->qty.'</span></p>';
+			}
+
+			$message = $orden;
+
+			$order->orden = $message;
+			$order->id_user = Auth::user()->id;
+			$order->status = 1;
+			$order->total = $cart->total();
+			$order->save();
+
+			//vaciar carrito
+			$cart->vaciar();
+
+			Mail::raw('Tienes un nuevo pedido en pconti.com', function($message){
+				$config = Config::find(1);
+				$message->from('pconti@pconti.com', 'PCONTI');
+				$message->to($config->mail)->subject('Nuevo pedido');
+			});
+
 			return redirect('/')
-				->with('success', 'Payment success');
+				->with('success', 'El pago ha sido realizado con éxito');
 		}
 		return redirect('/')
 			->with('error', 'Payment failed');

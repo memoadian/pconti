@@ -19,9 +19,11 @@ Route::get('/p/{id}/{slug}', 'ProductController@index');
 
 Route::get('buscar', 'SearchController@index');
 
-Route::get('categoria/{categoryName}', 'CategoryController@index');
+Route::get('categoria/{categorySlug}', 'CategoryController@index');
 
 Route::get('contacto', 'ContactController@index');
+
+Route::post('contactar', 'ContactController@send');
 
 Route::get('legal', 'LegalController@index');
 
@@ -31,23 +33,21 @@ Route::get('registro', 'CheckoutController@register');
 
 Route::post('registrando', 'CheckoutController@doregister');
 
+Route::post('editme/{id}', 'CheckoutController@editregister');
+
+Route::get('login', 'LoginController@login');
+
 Route::post('dologin', 'LoginController@dologin');
 
+Route::get('recover', 'LoginController@recover');
+
+Route::post('recovering', 'LoginController@recovering');
+
+Route::get('set', 'LoginController@set');
+
+Route::post('seteando/', 'LoginController@seting');
+
 Route::get('salir', 'LoginController@logout');
-
-/* MAIL */
-
-Route::get('mail', function(){
-
-	Mail::raw('Text to e-mail', function($message){
-
-		$message->from('me@example.com', 'Laravel');
-
-		$message->to('memoadian@gmail.com');
-
-	});
-
-});
 
 /*
 * Cart
@@ -77,13 +77,44 @@ Route::get('payment/status', 'PaypalPaymentController@getPaymentStatus');
 * Backend login/out
 */
 
-Route::get('appanel', 'PanelController@index');
 
-Route::get('appanel/login', 'PanelLoginController@index');
+Route::get('appanel/login', ['as' => 'login', 'uses' => 'PanelLoginController@index']);
 
 Route::post('appanel/dologin', 'PanelLoginController@dologin');
 
 Route::get('appanel/logout', 'PanelLoginController@logout');
+
+/*
+* Backend Slider
+*/
+
+Route::get('appanel/sliders', 'PanelSliderController@index');
+
+Route::get('appanel/slider/agregar', 'PanelSliderController@add');
+
+Route::post('appanel/slider/agregando', 'PanelSliderController@doadd');
+
+Route::get('appanel/slider/editar/{id}', 'PanelSliderController@edit');
+
+Route::post('appanel/slider/editando/{id}', 'PanelSliderController@doedit');
+
+Route::get('appanel/slider/eliminar/{id}', 'PanelSliderController@remove');
+
+/*
+* Backend Orders
+*/
+
+Route::get('appanel', 'OrderController@index');
+
+Route::get('appanel/orden/{id}', 'OrderController@order');
+
+Route::get('appanel/enviadas', 'OrderController@sends');
+
+Route::get('appanel/enviar/{id}', 'OrderController@check');
+
+Route::get('appanel/regresar/{id}', 'OrderController@uncheck');
+
+Route::get('appanel/orden/eliminar/{id}', 'OrderController@remove');
 
 /*
 * Backend Productos
@@ -142,6 +173,14 @@ Route::get('appanel/usuario/editar/{id}', 'PanelUserController@edit');
 Route::post('appanel/usuario/editando/{id}', 'PanelUserController@doedit');
 
 Route::get('appanel/usuario/eliminar/{id}', 'PanelUserController@remove');
+
+/*
+* backend Clientes
+*/
+
+Route::get('appanel/clientes', 'PanelUserController@clients');
+
+Route::get('appanel/cliente/{id}', 'PanelUserController@client');
 
 /*
 * Backend Images

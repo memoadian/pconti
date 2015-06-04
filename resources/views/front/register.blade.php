@@ -3,7 +3,9 @@
 @section('content')
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
-			<p class="aviso">Para realizar el pago necesitas registrarte</p>
+			<p class="aviso">
+				Para realizar el pago necesitas registrarte, o si tienes cuenta <a href="{{ url('/login') }}">click aqui</a>
+			</p>
 			<form class="checkout" action="{{url('registrando')}}" method="post" accept-charset="utf-8">
 				{!! $errors->first('name', '<p class="error">:message</p>') !!}
 				<input type="text" name="name" value="{{ old('name') }}" placeholder="Nombre">
@@ -30,7 +32,7 @@
 				<input type="text" name="colony" value="{{ old('colony') }}" placeholder="Colonia">
 
 				{!! $errors->first('zip', '<p class="error">:message</p>') !!}
-				<input type="text" name="zip" value="{{ old('zip') }}" placeholder="Colonia">
+				<input type="text" name="zip" value="{{ old('zip') }}" placeholder="Código postal">
 
 				{!! $errors->first('delegation', '<p class="error">:message</p>') !!}
 				<input type="text" name="delegation" value="{{ old('delegation') }}" placeholder="Delegación o Municipio">

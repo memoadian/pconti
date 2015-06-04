@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Cart;
 use Input;
+use App\Classes\Cleaner;
 
 /**
 * Carrito
@@ -25,7 +26,8 @@ class CartController extends Controller{
 				'price' => $price,
 				'options' => array(
 					'image' => $image,
-					'sku' => $sku
+					'sku' => $sku,
+					'slug' => Cleaner::url($name)
 				),
 			)
 		);

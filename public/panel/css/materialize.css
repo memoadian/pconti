@@ -8427,6 +8427,27 @@ ul.side-nav.fixed li.avatar {
   background: #263238;;
   color: #fff;
 }
+.tab-orders{
+  width: 100%;
+  border-bottom: 2px solid #263238;
+}
+.tab-orders li{
+  display: inline-block;
+}
+.tab-orders li a{
+  display: block;
+  padding: 5px 10px;
+}
+.tab-orders li a.active{
+  background: #263238;
+  color: #fff;
+}
+.order{
+  background: #f2f2f2;
+  border: 1px solid #e5e5e5;
+  padding: 20px;
+  margin-bottom: 20px;
+}
 @media(max-width: 993px){
   .slicknav_menu{
     display: block;

@@ -23,6 +23,12 @@
 		</div>
 		<div class="row">
 			<div class="input-field col s12">
+				<input id="mail" name="mail" type="text" value="{{ $config->mail }}" placeholder="">
+				<label for="mail">Correro de contacto</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
 				<input id="gmap" name="gmap" type="text" value="{{ $config->gmap }}" placeholder="19.379406, -99.159145">
 				<label for="gmap">Google Maps</label>
 			</div>

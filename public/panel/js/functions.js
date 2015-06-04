@@ -97,7 +97,7 @@ $(document).ready(function(){
 
 			if(value.length >= 2){
 				$.ajax({
-					url: uploads+'tags',
+					url: burl+'tags/json',
 					method: 'get',
 					data: {search: value}
 				}).done(function(res){
@@ -139,6 +139,8 @@ $(document).ready(function(){
 
 	$(document).on('click', '.closetag', function(){
 		$(this).closest('li').remove();
+
+		fillTags();
 	});
 
 	$(document).on('click', '.removetag', function(){
@@ -310,6 +312,19 @@ $(document).ready(function(){
 
 		//actualizamos inputs
 		fillImages();
+
+		//para el slide
+		var newsrc = $(this).attr('src');
+		var newimg = $('<img>', {src: src, 'data-id': id});
+		var newdiv = $('<div>', {class: 'product-img'});
+		var newremove = $('<span>', {class: 'remove'});
+		var newiconClose = $('<i>', {class: 'mdi-navigation-close'});
+
+		newremove.append(newiconClose);
+		newdiv.append(newremove);
+		newdiv.append(newimg);
+		$('.imagen').html(newdiv);
+		$('[name="img"]').val(newsrc);
 	});
 
 	$(document).on('click', '.remove', function(e){
@@ -319,8 +334,11 @@ $(document).ready(function(){
 		if(principal.hasClass('active')){
 			$('[name="image"]').val('');
 		}
+
 		//actualizamos inputs
 		fillImages();
+
+		$('[name="img"]').val('');
 	});
 
 	$(document).on('click', '.product-img', function(){
@@ -389,6 +407,24 @@ $(document).ready(function(){
 		var id = $(this).attr('data-id');
 
 		remove('Este usuario no podrá ser recuperado', burl+'usuario/eliminar/'+id, delItem, 'El usuario no ha sido borrado');
+
+	});
+
+	$('.delete-order').click(function(e){
+		e.preventDefault();
+		var delItem = $(this).closest('li');
+		var id = $(this).attr('data-id');
+
+		remove('Esta orden no podrá recuperarse', burl+'orden/eliminar/'+id, delItem, 'La orden no ha sido borrada');
+
+	});
+
+	$('.delete-slide').click(function(e){
+		e.preventDefault();
+		var delItem = $(this).closest('li');
+		var id = $(this).attr('data-id');
+
+		remove('Este slider será eliminado', burl+'slider/eliminar/'+id, delItem, 'El slide no ha sido borrado');
 
 	});
 

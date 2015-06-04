@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Picture;
 use Image;
 use Input;
 use DB;
+use Auth;
 use App\Classes\Cleaner;
 
 /**
@@ -63,14 +66,8 @@ class PanelImageController extends Controller{
 				$pathSq = public_path('uploads/sq/'.$filename);
 
 				//redimensiones, a todos tamaños  de carpetascuidando el upsize
-				Image::make($file)->resize(640, 640, function ($constraint) {
-					$constraint->aspectRatio();
-					$constraint->upsize();
-				})->save($pathMedium);
-				Image::make($file)->fit(320, 320, function ($constraint) {
-					$constraint->aspectRatio();
-					$constraint->upsize();
-				})->save($pathSmall);
+				Image::make($file)->fit(640, 640)->save($pathMedium);
+				Image::make($file)->fit(320, 320)->save($pathSmall);
 				Image::make($file)->fit(128, 128)->save($pathSq);
 
 				//insertamos la imagen en la bd
@@ -140,29 +137,35 @@ class PanelImageController extends Controller{
 	}
 
 	public function remove($id){
-		$img = Picture::find($id);
-		$imgName = $img->name.'-'.$img->md5.'.'.$img->ext;
-		if( file_exists( public_path( 'uploads/'.$imgName) ) ){
-			unlink(	public_path( 'uploads/'.$imgName ) );
-		}
-		if( file_exists( public_path( 'uploads/medium/'.$imgName) ) ){
-			unlink(	public_path( 'uploads/medium/'.$imgName ) );
-		}
-		if( file_exists( public_path( 'uploads/small/'.$imgName) ) ){
-			unlink(	public_path( 'uploads/small/'.$imgName ) );
-		}
-		if( file_exists( public_path( 'uploads/sq/'.$imgName) ) ){
-			unlink(	public_path( 'uploads/sq/'.$imgName ) );
-		}
+		$acc = Check::check(Auth::user()->permisos, 13);
 
-		$img->producto()->detach();
-		$img->delete();
+		if( $acc || Auth::user()->rol == 1 ){
+			$img = Picture::find($id);
+			$imgName = $img->name.'-'.$img->md5.'.'.$img->ext;
+			if( file_exists( public_path( 'uploads/'.$imgName) ) ){
+				unlink(	public_path( 'uploads/'.$imgName ) );
+			}
+			if( file_exists( public_path( 'uploads/medium/'.$imgName) ) ){
+				unlink(	public_path( 'uploads/medium/'.$imgName ) );
+			}
+			if( file_exists( public_path( 'uploads/small/'.$imgName) ) ){
+				unlink(	public_path( 'uploads/small/'.$imgName ) );
+			}
+			if( file_exists( public_path( 'uploads/sq/'.$imgName) ) ){
+				unlink(	public_path( 'uploads/sq/'.$imgName ) );
+			}
 
-		DB::table('products')
-            ->where('image', $imgName)
-            ->update(['image' => '']);
+			$img->producto()->detach();
+			$img->delete();
 
-		return 'Imágen eliminada correctamente';
+			DB::table('products')
+	            ->where('image', $imgName)
+	            ->update(['image' => '']);
+
+			return 'Imágen eliminada correctamente';
+		}else{
+			return 'No tienes permisos para realizar esta acción';
+		}
 	}
 
 }

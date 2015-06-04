@@ -8,7 +8,7 @@ class Tag extends Model {
 
 	public $timestamps = false;
 
-	public function producto(){
+	public function productos(){
 		return $this->belongsToMany('App\Product');
 	}
 	

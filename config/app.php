@@ -148,6 +148,7 @@ return [
 		/* My Providers */
 		'Gloudemans\Shoppingcart\ShoppingcartServiceProvider',
 		'Intervention\Image\ImageServiceProvider',
+		'Greggilbert\Recaptcha\RecaptchaServiceProvider'
 	],
 
 	/*
@@ -199,6 +200,7 @@ return [
 		/* My alliases */
 		'Cart'      => 'Gloudemans\Shoppingcart\Facades\Cart',
 		'Image' => 'Intervention\Image\Facades\Image',
+		'Recaptcha' => 'Greggilbert\Recaptcha\Facades\Recaptcha',
 	],
 
 ];

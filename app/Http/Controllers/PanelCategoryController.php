@@ -28,7 +28,7 @@ class PanelCategoryController extends Controller {
 	public function doadd(){
 		$acc = Check::check(Auth::user()->permisos, 5);
 
-		if($acc){
+		if( $acc || Auth::user()->rol == 1 ){
 			$validator = Validator::make(
 				array(
 					'catname' => Input::get('catname'),
@@ -68,7 +68,7 @@ class PanelCategoryController extends Controller {
 	public function edit($id){
 		$acc = Check::check(Auth::user()->permisos, 5);
 
-		if($acc){
+		if( $acc || Auth::user()->rol == 1 ){
 			$categorias = Category::all();
 			$categoria = Category::find($id);
 			$data = array(
@@ -85,7 +85,7 @@ class PanelCategoryController extends Controller {
 	public function doedit($id){
 		$acc = Check::check(Auth::user()->permisos, 5);
 
-		if($acc){
+		if( $acc || Auth::user()->rol == 1 ){
 			$validator = Validator::make(
 				array(
 					'catname' => Input::get('catname'),
@@ -125,7 +125,7 @@ class PanelCategoryController extends Controller {
 	public function remove($id){
 		$acc = Check::check(Auth::user()->permisos, 6);
 
-		if($acc){
+		if( $acc || Auth::user()->rol == 1 ){
 			$categoria = Category::find($id);
 			$categoria->delete();
 

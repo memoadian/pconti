@@ -4,6 +4,7 @@ use Validator;
 use Input;
 use Hash;
 use Auth;
+use DB;
 use App\User;
 use App\Permit;
 
@@ -17,8 +18,8 @@ class PanelUserController extends Controller{
 	}
 	
 	public function index(){
-		$usuarios = User::all();
-		$permisos = Permit::all();
+		$usuarios = User::where('rol', 1)->orwhere('rol', 0)->get();
+		$permisos = Permit::orderBy('permit_key')->get();
 
 		$data = array(
 			'title' => 'Lista de usuarios',
@@ -91,8 +92,8 @@ class PanelUserController extends Controller{
 		$acc = Check::check(Auth::user()->permisos, 1);
 
 		if( $acc || Auth::user()->rol == 1 ){
-			$usuarios = User::all();
-			$permisos = Permit::all();
+			$usuarios = User::where('rol', 1)->orwhere('rol', 0)->get();
+			$permisos = Permit::orderBy('permit_key')->get();
 			$usuario = User::find($id);
 
 			$permitidos = array();
@@ -179,12 +180,53 @@ class PanelUserController extends Controller{
 		}
 	}
 
+	public function clients(){
+		$acc = Check::check(Auth::user()->permisos, 14);
+
+		if( $acc || Auth::user()->rol == 1 ){
+			$clientes = User::where('rol', 2)->paginate(20);
+
+			$data = array(
+				'title' => 'Clientes',
+				'clientes' => $clientes
+			);
+
+			return view('panel/clients/index', $data);
+		}else{
+			return view( 'panel/noaccess', ['title' => 'Acceso denegado'] );
+		}
+	}
+
+	public function client($id){
+		$acc = Check::check(Auth::user()->permisos, 14);
+
+		if( $acc || Auth::user()->rol == 1 ){
+			$cliente = User::find($id);
+
+			$data = array(
+				'title' => 'Ver Cliente',
+				'c' => $cliente
+			);
+
+			return view('panel/clients/client', $data);
+		}else{
+			return view( 'panel/noaccess', ['title' => 'Acceso denegado'] );
+		}
+	}
+
+	public function doclient(){
+
+	}
+
 	public function remove($id){
 		$acc = Check::check(Auth::user()->permisos, 2);
 
 		if( $acc || Auth::user()->rol == 1 ){
 			$usuario = User::find($id);
 			$usuario->permisos()->detach();
+
+			DB::table('orders')->where('id_user', $id)->delete();
+
 			$usuario->delete();
 
 			return "El usuario ha sido eliminado exitosamente";

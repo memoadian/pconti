@@ -43,6 +43,7 @@ class PanelConfigController extends Controller {
 			$config->analytics = Input::get('analytics');
 			$config->gmap = Input::get('gmap');
 			$config->mailgun = Input::get('mailgun');
+			$config->mail = Input::get('mail');
 			$config->facebook = Input::get('facebook');
 			$config->twitter = Input::get('twitter');
 			$config->gplus = Input::get('gplus');

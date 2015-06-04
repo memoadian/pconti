@@ -21,7 +21,7 @@
 </head>
 <body>
 	<!-- SIDEBAR -->
-	@if(Auth::check())
+	@if(Auth::check() && Auth::user()->rol != 2)
 	@section('sidebar')
 		<header>
 			<ul class="side-nav fixed">
@@ -34,8 +34,13 @@
 			<li class="separator"></li>
 
 				<li class="bold">
-					<a href="{{url('/appanel')}}" class="waves-effect waves-teal">
-						<i class="mdi-action-home"></i> Inicio
+					<a href="{{ url('appanel/sliders') }}" class="waves-effect waves-teal">
+						<i class="mdi-image-photo-library"></i> Slider
+					</a>
+				</li>
+				<li class="bold">
+					<a href="{{url('appanel')}}" class="waves-effect waves-teal">
+						<i class="mdi-image-style"></i> Pedidos
 					</a>
 				</li>
 				<li class="bold">
@@ -87,12 +92,10 @@
 			</ul>
 		</header>
 	@show
-	@endif
 
 	<div class="row">
 		<main>
 			<!-- NAV -->
-			@if(Auth::check())
 			<nav class="top-nav">
 				<div class="container">
 					<div class="nav-wrapper">
@@ -102,8 +105,7 @@
 					</div>
 				</div>
 			</nav>
-			@endif
-
+			
 			<!-- CONTENIDO -->
 			<div class="container">
 				@section('content')
@@ -115,5 +117,10 @@
 			@show
 		</main>
 	</div>
+	@else
+		@if( Route::currentRouteName() != 'login' )
+		<img style="margin:0 auto; width:50%; display:block" src="http://www.404notfound.fr/assets/images/pages/img/taptapdesign.jpg" alt="">
+		@endif
+	@endif
 </body>
 </html>

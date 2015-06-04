@@ -92,6 +92,19 @@ $(document).ready(function(){
 
 					//actualizamos inputs
 					fillImages();
+
+					//para el slide
+					var newsrc = resp.filelink;
+					var newimg = $('<img>', {src: src, 'data-id': id});
+					var newdiv = $('<div>', {class: 'product-img'});
+					var newremove = $('<span>', {class: 'remove'});
+					var newiconClose = $('<i>', {class: 'mdi-navigation-close'});
+
+					newremove.append(newiconClose);
+					newdiv.append(newremove);
+					newdiv.append(newimg);
+					$('.imagen').html(newdiv);
+					$('[name="img"]').val(newsrc);
 				}
 			});
 		}
